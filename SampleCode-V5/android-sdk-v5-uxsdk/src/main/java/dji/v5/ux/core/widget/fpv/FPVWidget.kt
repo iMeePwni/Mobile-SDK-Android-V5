@@ -79,6 +79,7 @@ open class FPVWidget @JvmOverloads constructor(
     private val verticalOffset: Guideline = findViewById(R.id.vertical_offset)
     private val horizontalOffset: Guideline = findViewById(R.id.horizontal_offset)
     private var fpvStateChangeResourceId: Int = INVALID_RESOURCE
+    private var fpvSizeChangedListener: ((FPVSize) -> Unit)? = null
 
     private val cameraSurfaceCallback = object : SurfaceHolder.Callback {
         override fun surfaceCreated(holder: SurfaceHolder) {
@@ -89,6 +90,7 @@ open class FPVWidget @JvmOverloads constructor(
         override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
             this@FPVWidget.width = width
             this@FPVWidget.height = height
+            fpvSizeChangedListener?.invoke(FPVSize(fpvSurfaceView.width, fpvSurfaceView.height))
             LogUtils.i(LogPath.SAMPLE, "surfaceChanged: ${widgetModel.getCameraIndex()}", "width:$width", ",height:$height")
             updateCameraStream()
         }
@@ -299,6 +301,7 @@ open class FPVWidget @JvmOverloads constructor(
         if (!isInEditMode) {
             widgetModel.cleanup()
         }
+        fpvSizeChangedListener = null
         super.onDetachedFromWindow()
     }
 
@@ -439,6 +442,10 @@ open class FPVWidget @JvmOverloads constructor(
         cameraSideTextView.setTextAppearance(context, textAppearance)
     }
 
+    fun setOnFpvSizeChangedListener(listener: (FPVSize) -> Unit) {
+        fpvSizeChangedListener = listener
+    }
+
     @SuppressLint("Recycle")
     private fun initAttributes(context: Context, attrs: AttributeSet) {
         context.obtainStyledAttributes(attrs, R.styleable.FPVWidget).use { typedArray ->
@@ -529,6 +536,14 @@ open class FPVWidget @JvmOverloads constructor(
             }
         }
     }
+
+    /**
+     * The size of the video feed within this widget
+     *
+     * @property width The width of the video feed within this widget
+     * @property height The height of the video feed within this widget
+     */
+    data class FPVSize(val width: Int, val height: Int)
 
     /**
      * Get the [ModelState] updates
