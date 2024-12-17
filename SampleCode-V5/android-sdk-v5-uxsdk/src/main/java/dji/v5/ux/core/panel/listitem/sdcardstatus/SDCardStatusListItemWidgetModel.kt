@@ -26,6 +26,7 @@ package dji.v5.ux.core.panel.listitem.sdcardstatus
 import dji.sdk.keyvalue.key.CameraKey
 import dji.sdk.keyvalue.value.camera.CameraSDCardState
 import dji.sdk.keyvalue.key.KeyTools
+import dji.sdk.keyvalue.value.camera.CameraStorageLocation
 import dji.sdk.keyvalue.value.common.ComponentIndexType
 import io.reactivex.rxjava3.core.Flowable
 import dji.v5.ux.core.base.DJISDKModel
@@ -66,7 +67,7 @@ class SDCardStatusListItemWidgetModel(
     override fun inSetup() {
         bindDataProcessor(
             KeyTools.createKey(
-                CameraKey.KeySSDRemainingSpaceInMB, cameraIndex), sdCardRemainingCapacityProcessor)
+                CameraKey.KeySDCardRemainSpace, cameraIndex), sdCardRemainingCapacityProcessor)
         bindDataProcessor(
             KeyTools.createKey(
                 CameraKey.KeyCameraSDCardState, cameraIndex), sdCardOperationStateProcessor)
@@ -97,7 +98,7 @@ class SDCardStatusListItemWidgetModel(
     fun formatSDCard(): Completable {
         return djiSdkModel.performActionWithOutResult(
             KeyTools.createKey(
-                CameraKey.KeyFormatStorage, cameraIndex))
+                CameraKey.KeyFormatStorage, cameraIndex), CameraStorageLocation.SDCARD)
     }
 
     /**

@@ -73,7 +73,8 @@ open class SystemStatusSmartListModel @JvmOverloads constructor(
             AIRCRAFT_BATTERY_TEMPERATURE.widgetID,
             TRAVEL_MODE.widgetID,
             NOVICE_MODE.widgetID,
-            OBSTACLE_AVOIDANCE.widgetID
+            OBSTACLE_AVOIDANCE.widgetID,
+            SD_CARD_STATUS.widgetID,
         )
     }
 
